@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> HandSpeak - Tradutor Automático</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+       body {
+font-family: -apple-system, BlinkMacSystemFont;
+background: #ffffff;
+text-align: center;
+}
+
+.container {
+background: #f9fafb;
+padding: 25px;
+border-radius: 20px;
+max-width: 800px;
+margin: auto;
+}
+
+button {
+padding: 15px;
+margin: 10px;
+border-radius: 12px;
+border: 1px solid #ddd;
+background: white;
+font-weight: bold;
+}
+
+button:hover {
+background: #f3f4f6;
+}
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 LIBRAS-BOT</h1>
+        <p>Tradutor Automático de Português → Libras</p>
+    </div>
+    
+    <div class="controls">
+        <div class="status" id="status">🔌 Conecte o robô para começar</div>
+        
+        <div class="words-grid" id="wordsGrid">
+            <!-- CARDS SERÃO CRIADOS PELO JS -->
+        </div>
+        
+        <div class="input-section">
+            <input type="text" id="textoLivre" placeholder="Digite qualquer frase para traduzir...">
+            <button id="btnTexto" onclick="traduzirTexto()">🚀 Traduzir</button>
+            <button id="btnConectar" onclick="conectarRobo()">🔌 Conectar Robô</button>
+        </div>
+    </div>
+
+    <script>
+        // PALAVRAS PRÉ-DEFINIDAS (adicione mais!)
+        const palavrasLibras = [
+            { texto: "OI", emoji: "👋", comando: "OI" },
+            { texto: "TCHAU", emoji: "👋", comando: "TCHAU" },
+            { texto: "OBRIGADO", emoji: "🙏", comando: "OBRIGADO" },
+            { texto: "DESCULPA", emoji: "😔", comando: "DESCULPA" },
+            { texto: "BOM DIA", emoji: "☀️", comando: "BOM_DIA" },
+            { texto: "BOA NOITE", emoji: "🌙", comando: "BOA_NOITE" },
+            { texto: "FOME", emoji: "🍽️", comando: "FOME" },
+            { texto: "SEDE", emoji: "💧", comando: "SEDE" },
+            { texto: "SIM", emoji: "👍", comando: "SIM" },
+            { texto: "NAO", emoji: "👎", comando: "NAO" },
+            { texto: "AJUDA", emoji: "🆘", comando: "AJUDA" },
+            { texto: "AMOR", emoji: "❤️", comando: "AMOR" }
+        ];
+
+        let port = null;
+        let writer = null;
+        let connected = false;
+
+        // CRIA OS CARDS
+        function criarCards() {
+            const grid = document.getElementById('wordsGrid');
+            grid.innerHTML = '';
+            palavrasLibras.forEach(palavra => {
+                const card = document.createElement('div');
+                card.className = 'word-card';
+                card.innerHTML = `<div style="font-size: 3em;">${palavra.emoji}</div><div>${palavra.texto}</div>`;
+                card.onclick = () => enviarComando(palavra.comando);
+                grid.appendChild(card);
+            });
+        }
+
+        // CONECTA COM ARDUINO
+        async function conectarRobo() {
+            try {
+                document.getElementById('status').textContent = '🔄 Conectando...';
+                document.getElementById('status').className = 'status connecting';
+                
+                port = await navigator.serial.requestPort({ filters: [] });
+                await port.open({ baudRate: 9600 });
+                writer = port.writable.getWriter();
+                
+                connected = true;
+                document.getElementById('status').textContent = '✅ ROBÔ CONECTADO!';
+                document.getElementById('status').className = 'status connected';
+                document.getElementById('btnConectar').textContent = '🔌 Desconectar';
+                document.getElementById('btnConectar').onclick = desconectarRobo;
+                
+            } catch (error) {
+                document.getElementById('status').textContent = '❌ Erro na conexão';
+                document.getElementById('status').className = 'status error';
+            }
+        }
+
+        function desconectarRobo() {
+            if (writer) writer.close();
+            connected = false;
+            document.getElementById('status').textContent = '🔌 Conecte o robô para começar';
+            document.getElementById('status').className = 'status';
+            document.getElementById('btnConectar').textContent = '🔌 Conectar Robô';
+            document.getElementById('btnConectar').onclick = conectarRobo;
+        }
+
+        // ENVIA COMANDO PRO ROBÔ
+        async function enviarComando(comando) {
+            if (!connected) {
+                alert('🔌 Conecte o robô primeiro!');
+                return;
+            }
+            
+            try {
+                await writer.write(new TextEncoder().encode(comando + '\n'));
+                document.getElementById('status').textContent = `✅ Executando: ${comando}`;
+            } catch (error) {
+                document.getElementById('status').textContent = '❌ Erro ao enviar comando';
+            }
+        }
+
+        // TRADUZ TEXTO LIVRE (SIMPLIFICADO)
+        async function traduzirTexto() {
+            const texto = document.getElementById('textoLivre').value.toUpperCase();
+            if (!texto) return;
+            
+            // Mapeamento simples (expanda!)
+            const mapa = {
+                'OI': 'OI', 'OLÁ': 'OI',
+                'TCHAU': 'TCHAU', 'ADEUS': 'TCHAU',
+                'OBRIGADO': 'OBRIGADO',
+                'DESCULPA': 'DESCULPA', 'PERDÃO': 'DESCULPA'
+            };
+            
+            for (let palavra of Object.keys(mapa)) {
+                if (texto.includes(palavra)) {
+                    enviarComando(mapa[palavra]);
+                    return;
+                }
+            }
+            alert('Palavra não encontrada! Use as palavras dos cards.');
+        }
+
+        // INICIALIZA
+        criarCards();
+    </script>
+</body>
+</html>
