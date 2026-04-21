@@ -1,138 +1,120 @@
 <!DOCTYPE html>
-
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HandSpeak</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HandSpeak</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+    body{background:#f7f7f9;color:#222;overflow-x:hidden}
 
-<style>
-body {
-    font-family: 'Segoe UI';
-    background: linear-gradient(135deg, #0f172a, #020617);
-    color: white;
-    text-align: center;
-    margin: 0;
-}
+    /* Header */
+    header{
+      position:sticky;top:0;z-index:10;
+      background:linear-gradient(90deg,#ff6aa2,#ffb347);
+      padding:18px 40px;display:flex;justify-content:space-between;align-items:center;
+      box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    }
+    header h1{color:#fff;font-weight:700;letter-spacing:.5px}
 
-h1 {
-    margin-top: 30px;
-    font-size: 2.5em;
-    letter-spacing: 2px;
-}
+    nav a{
+      text-decoration:none;margin-left:12px;background:#fff;
+      padding:10px 20px;border-radius:999px;color:#333;font-weight:500;
+      transition:.25s ease;display:inline-block
+    }
+    nav a:hover{transform:translateY(-2px);box-shadow:0 6px 15px rgba(0,0,0,.15);background:#222;color:#fff}
 
-p {
-    opacity: 0.7;
-}
+    /* Hero */
+    .hero{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:70px 60px;gap:50px;position:relative
+    }
 
-.container {
-    background: #111827;
-    padding: 30px;
-    border-radius: 20px;
-    max-width: 850px;
-    margin: 30px auto;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
-}
+    /* Decorative blobs */
+    .blob1,.blob2{
+      position:absolute;border-radius:50%;filter:blur(40px);opacity:.4;z-index:-1
+    }
+    .blob1{width:300px;height:300px;background:#ff6aa2;left:-100px;bottom:-100px}
+    .blob2{width:250px;height:250px;background:#ffb347;right:-80px;top:50px}
 
-.status {
-    margin: 20px;
-    padding: 12px;
-    border-radius: 10px;
-    font-weight: bold;
-}
+    .hero-text{max-width:520px;animation:fadeUp 1s ease forwards}
 
-.waiting { background: #facc15; color: black; }
-.connected { background: #22c55e; }
-.error { background: #ef4444; }
+    .hero-text h2{
+      font-size:32px;margin-bottom:20px;font-weight:700;line-height:1.2
+    }
 
-button {
-    padding: 15px;
-    margin: 10px;
-    border-radius: 12px;
-    border: none;
-    background: #06b6d4;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
+    .hero-text p{
+      line-height:1.7;color:#555;margin-bottom:25px
+    }
 
-button:hover {
-    background: #0891b2;
-    transform: scale(1.08);
-}
+    .hero-text button{
+      padding:12px 28px;border:none;border-radius:999px;
+      background:linear-gradient(90deg,#ff6aa2,#ffb347);
+      color:#fff;font-weight:600;cursor:pointer;
+      transition:.25s ease
+    }
+    .hero-text button:hover{transform:scale(1.08);box-shadow:0 8px 20px rgba(0,0,0,.2)}
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    margin-top: 20px;
-}
-</style>
+    .hero img{
+      width:380px;border-radius:25px;
+      animation:float 4s ease-in-out infinite
+    }
 
+    /* Animations */
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(30px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @keyframes float{
+      0%{transform:translateY(0)}
+      50%{transform:translateY(-12px)}
+      100%{transform:translateY(0)}
+    }
+
+    footer{
+      text-align:center;padding:25px;margin-top:40px;color:#777
+    }
+
+    /* Mobile */
+    @media(max-width:768px){
+      .hero{flex-direction:column;text-align:center;padding:50px 20px}
+      nav{display:none}
+      .hero img{width:280px}
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>🤖 HandSpeak</h1>
-<p>Sistema inteligente de tradução para Libras</p>
+<header>
+  <h1>HandSpeak 🤟</h1>
+  <nav>
+    <a href="libras.html">Libras</a>
+    <a href="conectar.html">Conectar</a>
+    <a href="sobre.html">Sobre</a>
+    <a href="equipe.html">Quem somos</a>
+  </nav>
+</header>
 
-<div class="container">
+<section class="hero">
+  <div class="blob1"></div>
+  <div class="blob2"></div>
 
-<div id="status" class="status waiting">
-Clique em "Iniciar Sistema"
-</div>
+  <div class="hero-text">
+    <h2>Já pensou em ver palavras ganhando movimento?</h2>
+    <p>
+      Este projeto tem como objetivo dar forma às palavras, convertendo texto em sinais de Libras por meio de um robô, tornando a comunicação mais acessível. A proposta é utilizar a tecnologia para facilitar a comunicação e tornar a linguagem de sinais mais inclusiva.
+    </p>
+    <button>Começar</button>
+  </div>
 
-<button onclick="iniciar()">🚀 Iniciar Sistema</button>
+  <img src="robo.png" alt="Robô Libras">
+</section>
 
-<div class="grid">
-<button onclick="enviar('OI')">👋 OI</button>
-<button onclick="enviar('TCHAU')">👋 TCHAU</button>
-<button onclick="enviar('OBRIGADO')">🙏 OBRIGADO</button>
-<button onclick="enviar('DESCULPA')">😔 DESCULPA</button>
-<button onclick="enviar('SIM')">👍 SIM</button>
-<button onclick="enviar('NAO')">👎 NÃO</button>
-<button onclick="enviar('AJUDA')">🆘 AJUDA</button>
-<button onclick="enviar('AMOR')">❤️ AMOR</button>
-<button onclick="enviar('FOME')">🍽️ FOME</button>
-<button onclick="enviar('SEDE')">💧 SEDE</button>
-<button onclick="enviar('BOM_DIA')">☀️ BOM DIA</button>
-<button onclick="enviar('BOA_NOITE')">🌙 BOA NOITE</button>
-</div>
-
-</div>
-
-<script>
-let port, writer;
-
-async function iniciar() {
-    try {
-        document.getElementById("status").innerText = "Conectando...";
-        document.getElementById("status").className = "status waiting";
-
-        port = await navigator.serial.requestPort();
-        await port.open({ baudRate: 9600 });
-        writer = port.writable.getWriter();
-
-        document.getElementById("status").innerText = "Sistema conectado!";
-        document.getElementById("status").className = "status connected";
-
-    } catch {
-        document.getElementById("status").innerText = "Erro na conexão";
-        document.getElementById("status").className = "status error";
-    }
-}
-
-async function enviar(cmd) {
-    if (!writer) {
-        alert("Conecte o sistema primeiro!");
-        return;
-    }
-
-    document.getElementById("status").innerText = "Executando: " + cmd;
-
-    await writer.write(new TextEncoder().encode(cmd + "\n"));
-}
-</script>
+<footer>
+  © 2026 HandSpeak - Projeto Educacional
+</footer>
 
 </body>
 </html>
